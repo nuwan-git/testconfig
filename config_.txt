@@ -102,6 +102,10 @@ public class Employee {
 	@Column(name = "is_active")
 	private boolean isActive = true;
 
+	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    	@JoinColumn()
+    	private Department department;
+
 	public int getId() {
 		return id;
 	}
@@ -431,3 +435,24 @@ public class CommisionCalculateServiceImpl implements CommisionCalculateService 
         return commision;
     }
 }
+
+@Entity
+@Table(name="Employee")
+public class Employee {
+    @Id
+    @GeneratedValue
+    private int empId;
+    @Column(name="emp_name")
+    private String empName;
+    @Column(name="emp_selary")
+    private Double empSelary;
+    @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER,optional = false)
+    @JoinColumn(name="dep_id")
+    private Department department;
+}
+
+ public Employee getEmployeeByDepartmentId(Integer id) {
+        String query = "FROM Employee where department.depId = :departmentId";
+
+        return sessionFactory.getCurrentSession().createQuery(query,Employee.class).setParameter("departmentId",id.intValue()).getSingleResult();
+    }
