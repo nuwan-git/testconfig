@@ -93,7 +93,7 @@ dto
 public class Employee {
 
 	@Id
-	@GeneratedValue
+	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "employee_id")
 	private int id;
 	
@@ -357,3 +357,77 @@ public class EmployeeController {
 
 </body>
 </html>
+
+
+cntrl
+
+
+@Controller
+@RequestMapping("/head-hunter/data")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+public class HeadHunterController {
+
+    @Autowired
+    private HeadHunterDao headHunterDao;
+
+    @RequestMapping("/all/hunters")
+    @ResponseBody
+    public List<HeadHunter> getAllActiveHunters(){
+        return headHunterDao.list();
+    }
+
+    @RequestMapping("/{id}/hunter")
+    @ResponseBody
+    public HeadHunter getHuterById(@PathVariable int id){
+
+        return headHunterDao.get(id);
+    }
+
+    @RequestMapping(value = "/add/hunter", method = RequestMethod.POST)
+    @ResponseBody
+    public Boolean createHunter(@RequestBody HeadHunter headHunter){
+        return headHunterDao.add(headHunter);
+    }
+
+    @RequestMapping(value = "/update/hunter", method = RequestMethod.PUT)
+    @ResponseBody
+    public Boolean updateHunter(@RequestBody  HeadHunter headHunter){
+        return headHunterDao.update(headHunter);
+    }
+
+    @RequestMapping(value="/delete/hunter", method = RequestMethod.PUT)
+    @ResponseBody
+    public Boolean deleteHeadHunter(HeadHunter headHunter){
+
+        return headHunterDao.delete(headHunter);
+    }
+
+
+}
+
+@Service
+public interface CommisionCalculateService {
+
+    public double calculateCommission(String recruitmentStatus);
+}
+
+@Repository("commisionCalculateService")
+@Component
+public class CommisionCalculateServiceImpl implements CommisionCalculateService {
+
+    private double commision;
+    private static int  members_for_group = 5;
+    private static int  comission_from_one_recruiter = 200;
+    private  static Double comission_rate_for_one_recruiter = 0.1;
+
+    @Override
+    public double calculateCommission(String recruitmentStatus) {
+
+        if(recruitmentStatus.equals("true"))
+            commision = (members_for_group*comission_from_one_recruiter+(members_for_group*comission_from_one_recruiter)*comission_rate_for_one_recruiter);
+        else{
+            commision = comission_from_one_recruiter;
+        }
+        return commision;
+    }
+}
