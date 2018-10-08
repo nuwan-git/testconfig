@@ -1,0 +1,331 @@
+Front - web
+
+<properties>
+		<javaee.version>7.0</javaee.version>
+		<spring.version>4.3.6.RELEASE</spring.version>
+</properties>
+
+<dependencies>
+	
+		<dependency>
+			<groupId>net.cnr</groupId>
+			<artifactId>projectJKCSBackEnd</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- JAVA EE -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>${javaee.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!--SPRING -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- jstl -->
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- Spring webFlaw -->
+		<dependency>
+			<groupId>org.springframework.webflow</groupId>
+			<artifactId>spring-webflow</artifactId>
+			<version>2.4.7.RELEASE</version>
+		</dependency>
+
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<!-- update to latest version of JAVA -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+Back quickstart
+
+<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring.version>4.3.6.RELEASE</spring.version>
+		<hibernate.version>5.2.7.Final</hibernate.version>
+		<jackson.version>2.8.7</jackson.version>
+</properties>
+
+<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.4.1.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.1.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- validation dependancy -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.1.0.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.4.1.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.12</version>
+		</dependency>
+
+		<!-- jakson -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+<build>
+		<plugins>
+			<!-- update to latest version of JAVA -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+</build>
+
+
+Front
+web.xml
+
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1">
+
+	<display-name>Archetype Created Web Application</display-name>
+
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>
+
+dispatcher-servlet.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns = "http://www.springframework.org/schema/beans"
+
+   xmlns:context = "http://www.springframework.org/schema/context"
+   
+   xmlns:mvc = "http://www.springframework.org/schema/mvc"
+   
+   xmlns:wf="http://www.springframework.org/schema/webflow-config"
+	
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context.xsd
+   
+    http://www.springframework.org/schema/mvc
+   http://www.springframework.org/schema/mvc/spring-mvc.xsd
+   
+    http://www.springframework.org/schema/webflow-config
+   http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd
+   
+   
+   ">
+   
+   
+   <context:component-scan base-package="net.cnr"/>
+   <context:component-scan base-package="net.cnr.projectJKCSBackEnd"/>
+   
+   <mvc:annotation-driven/>
+   
+   <bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+   
+   
+   <bean id="viewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+		<property name="viewResolvers" ref="viewResolver"/>
+	</bean>
+   
+   </beans>
+   
+   
+ backend
+ 
+ HibernateConfigurations
+
+ @Configuration
+@ComponentScan(basePackages = {"net.cnr.projectJKCSBackEnd.dto"})
+@EnableTransactionManagement
+public class HibernateConfigurations {
+	
+	 /* change the below the dbms that you use */
+    private final static String DATABASE_URL = "jdbc:mysql://localhost:3306/dbjks";
+    private final static String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
+    private final static String DATABASE_DIALECT = "org.hibernate.dialect.MySQLDialect";
+    private final static String DATABASE_USERNAME = "root";
+    private final static String DATABASE_PASSWORD = "root";
+
+    /* data source bean will availabka */
+    @Bean
+    public DataSource getDataSourse() {
+        BasicDataSource datasourse = new BasicDataSource();
+
+		/* providing connection information */
+        datasourse.setDriverClassName(DATABASE_DRIVER);
+        datasourse.setUrl(DATABASE_URL);
+        datasourse.setUsername(DATABASE_USERNAME);
+        datasourse.setPassword(DATABASE_PASSWORD);
+
+        return datasourse;
+    }
+
+    @Bean
+    public SessionFactory getSessionFactory(DataSource datasource) {
+
+        LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(datasource);
+
+        builder.addProperties(getHibernateProperties());
+        builder.scanPackages("net.cnr.projectJKCSBackEnd.dto");
+
+        return builder.buildSessionFactory();
+
+    }
+
+    private Properties getHibernateProperties() {
+
+        Properties properties = new Properties();
+        properties.put("hibernate.dialect", DATABASE_DIALECT);
+        properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.format_sql", "true");
+        properties.put("hibernate.hbm2ddl.auto", "update");
+        return properties;
+
+    }
+
+    /* transactionmanager bean */
+    @Bean
+    public HibernateTransactionManager getTransactionManager(SessionFactory sessionfactory) {
+
+        HibernateTransactionManager transactionmanager = new HibernateTransactionManager(sessionfactory);
+
+        return transactionmanager;
+    }
+	
+
+}
+
+	
+

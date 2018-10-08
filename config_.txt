@@ -1,0 +1,359 @@
+dao
+
+public interface EmployeeDao {
+
+	public List<Employee> getAllEmployee();
+	public List<Employee> getActiveEmployee();
+	public Employee getEmployeeById(Integer id);
+
+	
+	public boolean createEmployee(Employee employee);
+	public boolean updateEmployee(Employee employee);
+	public boolean deleteEmployee(Employee employee);
+}
+
+daoImpl
+
+@Repository("employeeDao")
+@Transactional
+public class EmployeeDaoImpl implements EmployeeDao{
+
+	@Autowired
+	public SessionFactory sessionFactory;
+	@Override
+	public List<Employee> getAllEmployee() {
+		
+		return sessionFactory.getCurrentSession().createQuery("FROM Employee", Employee.class).getResultList();
+	}
+
+	
+	@Override
+	public Employee getEmployeeById(Integer id) {
+		
+		return sessionFactory.getCurrentSession().get(Employee.class, Integer.valueOf(id));
+	}
+
+	@Override
+	public List<Employee> getActiveEmployee() {
+		String selectActiveEmployee = "FROM Employee WHERE isActive = :active";
+		return sessionFactory.getCurrentSession().createQuery(selectActiveEmployee, Employee.class)
+				.setParameter("active", true)
+					.getResultList();
+	}
+	
+	
+
+	@Override
+	public boolean createEmployee(Employee employee) {
+		
+		try {
+			sessionFactory.getCurrentSession().persist(employee);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+
+	
+	@Override
+	public boolean updateEmployee(Employee employee) {
+		
+		try {
+			sessionFactory.getCurrentSession().update(employee);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+
+	@Override
+	public boolean deleteEmployee(Employee employee) {
+		
+		employee.setActive(false);
+		try {
+			sessionFactory.getCurrentSession().update(employee);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+}
+
+dto
+
+@Entity
+@Table(name = "EMPLOYEE")
+public class Employee {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "employee_id")
+	private int id;
+	
+	private String name;
+	
+	@Column(name = "is_active")
+	private boolean isActive = true;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	
+
+}
+
+
+test
+
+public class TestEmployee {
+
+	
+private static AnnotationConfigApplicationContext context;
+	
+	@Autowired
+	private static EmployeeDao employeeDao;
+	
+	private Employee employee;
+	
+	
+	@BeforeClass
+	public static void init() {
+		
+		context = new AnnotationConfigApplicationContext();
+		context.scan("net.cnr.projectJKCSBackEnd");
+		context.refresh();
+		employeeDao = (EmployeeDao) context.getBean("employeeDao");
+		
+	}
+	
+	/*@Test
+	public void testAddEmployee() {
+		employee = new Employee();
+		employee.setName("Arjun");
+		employee.setActive(true);
+		assertEquals(true, employeeDao.createEmployee(employee));
+		
+	}*/
+
+	
+	/*@Test
+	public void testGetAllEmployee() {
+		assertEquals(3, employeeDao.getAllEmployee().size());
+	}*/
+	
+	/*@Test
+	public void testGetAllActiveEmployee() {
+		assertEquals(3, employeeDao.getActiveEmployee().size());
+	}*/
+	
+	/*@Test
+	public void tstUpdateEmployee(){
+		employee =employeeDao.getEmployeeById(3);
+		employee.setActive(false);
+		
+		assertEquals(true,employeeDao.updateEmployee(employee));
+	}*/
+
+	/*@Test
+	public void testDeleteEmployee(){
+		employee =employeeDao.getEmployeeById(5);
+
+		assertEquals(true,employeeDao.deleteEmployee(employee));
+	}*/
+	
+}
+
+front
+controller
+
+@Controller
+@RequestMapping("/employee")
+public class EmployeeController {
+
+	@Autowired
+	private EmployeeDao employeeDao;
+
+	@RequestMapping(value = { "/" })
+	public ModelAndView index() {
+
+		ModelAndView mv = new ModelAndView("EmployeeView");
+		mv.addObject("title", "Employeee Management");
+
+		mv.addObject("employees", employeeDao.getActiveEmployee());
+		return mv;
+
+	}
+
+	@RequestMapping(value = "/saveEmployee", method = RequestMethod.POST)
+	public ModelAndView addEmployee(@ModelAttribute("employee") Employee employee) {
+
+		employeeDao.createEmployee(employee);
+
+		return new ModelAndView("redirect:/employee/");
+
+	}
+
+	@RequestMapping("/addEmp")
+	public ModelAndView showform() {
+		return new ModelAndView("addEmp", "command", new Employee());
+	}
+
+	@RequestMapping(value = "/editemp/{id}")
+	public ModelAndView edit(@PathVariable int id) {
+		Employee emp = employeeDao.getEmployeeById(id);
+		return new ModelAndView("empeditform", "command", emp);
+	}
+
+	/* It updates model object. */
+	@RequestMapping(value = "/editsave", method = RequestMethod.POST)
+	public ModelAndView editsave(@ModelAttribute("employee") Employee employee) {
+		employeeDao.updateEmployee(employee);
+		return new ModelAndView("redirect:/employee/");
+	}
+	
+	@RequestMapping(value="/deleteemp/{id}",method = RequestMethod.GET)  
+    public ModelAndView delete(@PathVariable int id){
+		
+        employeeDao.deleteEmployee(employeeDao.getEmployeeById(id));  
+        return new ModelAndView("redirect:/employee/");
+    }  
+
+}
+
+
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
+ <c:set var="contextRoot" value="${pageContext.request.contextPath }" />  
+ 
+       <h1>Add New Employee</h1>  
+       <form:form method="post" action="saveEmployee">    
+        <table >    
+         <tr>    
+          <td>Name : </td>   
+          <td><form:input path="name"  /></td>  
+         </tr>    
+         
+          <td> </td>    
+          <td><input type="submit" value="Save" /></td>    
+         </tr>    
+        </table>    
+       </form:form>    
+
+	   
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="contextRoot" value="${pageContext.request.contextPath }" />   
+  
+        <h1>Edit Employee</h1>  
+       <form:form method="POST" action="${contextRoot}/employee/editsave">    
+        <table >    
+        <tr>  
+        <td></td>    
+         <td><form:hidden  path="id" /></td>  
+         </tr>   
+         <tr>    
+          <td>Name : </td>   
+          <td><form:input path="name"  /></td>  
+         </tr>    
+         
+         <tr>    
+          <td> </td>    
+          <td><input type="submit" value="Edit Save" /></td>    
+         </tr>    
+        </table>    
+       </form:form>    
+
+
+	   <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+
+
+<title>${title}</title>
+</head>
+<body>
+
+	<div class="container">
+
+		<div class="row">
+
+			<div class="col-md-4"></div>
+
+			<div class="col-md-8 mx-auto">
+				<h3>Employee Register<a href="addEmp"> Add</a></h3>
+
+				<table class="tg">
+					<h3>Employee List</h3>
+					<tr>
+						<div class="col-md-4">
+							<th>Employee ID</th>
+						</div>
+						<div class="col-md-8">
+							<th>Employee Name</th>
+						</div>
+					</tr>
+
+					<c:forEach items="${employees}" var="emp">
+						<tr>
+							<div class="col-md-4">
+								<td>${emp.id}</td>
+							</div>
+							<div class="col-md-4">
+								<td>${emp.name}</td>
+							</div>
+							<div class="col-md-4">
+								<td><a href="editemp/${emp.id}">Edit</a></td>  
+							</div>
+							<div class="col-md-4">
+								<td><a href="deleteemp/${emp.id}">Delete</a></td>  
+							</div>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+
+		</div>
+
+	</div>
+
+
+</body>
+</html>
